@@ -30,12 +30,12 @@ const testUtilities = {
     createOneRandomItem: () => createRandomItems(1)[0]
 };
 
-describe('RegistryItem', () => {
+describe('<RegistryItem />', () => {
 
-    describe('visual content', () => {
+    describe('renders html', () => {
 
         let itemData, itemWrapper;
-        beforeEach('Create <RegistryItem /> wrapper', () => {
+        beforeEach('Create a <RegistryItem /> and render it', () => {
             itemData = {
                 id: 5,
                 name: 'Curtains',
@@ -44,47 +44,33 @@ describe('RegistryItem', () => {
             itemWrapper = shallow(<RegistryItem itemDetails={itemData}/>);
         });
 
-        it('includes "name" line as an h1', () => {
+        it('includes "name" as an h1', () => {
             expect(itemWrapper.find('h1')).to.have.html('<h1>Item name: <span>Curtains</span></h1>');
         });
 
-        it('includes "price" line as h2', () => {
+        it('includes "price" as h2', () => {
             expect(itemWrapper.find('h2')).to.have.html('<h2>Item price: <span>100</span></h2>');
         });
-
-        it('is not hardcoded', () => {
-            const aDifferentItem = {
-                id: 6,
-                name: 'Wine glasses',
-                price: 200
-            };
-            const differentItemWrapper = shallow(<RegistryItem itemDetails={aDifferentItem}/>);
-            expect(differentItemWrapper.find('h1')).to.have.html('<h1>Item name: <span>Wine glasses</span></h1>');
-            expect(differentItemWrapper.find('h2')).to.have.html('<h2>Item price: <span>200</span></h2>');
-        });
-
     });
 
-    describe('interactivity', () => {
+    describe('is interactive', () => {
 
         let itemData, itemWrapper, markAsPurchasedSpy;
-        beforeEach('Create <RegistryItem />', () => {
+        beforeEach('Create a <RegistryItem />', () => {
             itemData = testUtilities.createOneRandomItem();
             markAsPurchasedSpy = spy();
             itemWrapper = shallow(<RegistryItem itemDetails={itemData} markAsPurchased={markAsPurchasedSpy}/>);
         });
 
-        it('when clicked, invokes a function passed in as the markAsPurchased property with the item id', () => {
+        it('calls props.markAsPurchased with the item id when clicked', () => {
             itemWrapper.simulate('click');
             expect(markAsPurchasedSpy.called).to.be.true;
-            expect(markAsPurchasedSpy.calledWith(itemData.id)).to.be.true;
-        });
-
+        });        
     });
 
 });
 
-describe('RegistryList', () => {
+describe('<RegistryList />', () => {
 
     let randomItems;
     beforeEach('Create random example items', () => {
@@ -96,14 +82,15 @@ describe('RegistryList', () => {
         registryListWrapper = shallow(<RegistryList />);
     });
 
-    it('starts with an initial state having an empty registryItems array', () => {
+    it('starts with state.registryItems as an empty array', () => {
         const currentState = registryListWrapper.state();
         expect(currentState.registryItems).to.be.deep.equal([]);
     });
 
-    describe('visual content', () => {
 
-        it('is a <div> and has a first child element <h1> with the text "My Registry"', () => {
+    describe('renders', () => {
+
+        it('a <div> whose first child element is an <h1> with the text "My Registry"', () => {
 
             expect(registryListWrapper.is('div')).to.be.true;
 
@@ -113,7 +100,7 @@ describe('RegistryList', () => {
 
         });
 
-        it('is comprised of <RegistryItem /> components based on what gets placed on the state', () => {
+        it('child <RegistryItem /> components based its current state', () => {
 
             registryListWrapper.setState({registryItems: randomItems});
 
@@ -160,7 +147,7 @@ describe('AddToRegistryForm', () => {
 
     });
 
-    it('invokes passed in `onSend` function with local state when form is submitted', () => {
+    it('calls props.onSend with its state when its form is submitted', () => {
 
         const formInfo = {
             itemName: 'sheets',
